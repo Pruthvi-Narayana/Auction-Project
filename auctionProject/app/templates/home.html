@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        section {
+            text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #74CFBF; /* Change background color to match the first page */
+        }
+        html, body {
+            height: 100%;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        header {
+            background-color: #fff; /* Change header background color to match the first page */
+            color: black;
+            padding: 1em;
+            text-align: center;
+        }
+
+        main {
+            padding: 2em;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            background-color: #33ccff; /* Change button background color to match the first page */
+            color: white; /* Change button text color to match the first page */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Change button hover background color to match the first page */
+        }
+
+        main {
+            padding: 2em;
+            margin: 0 auto; /* Center the main content */
+            max-width: 800px; /* Optional: Set a maximum width for the content */
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>
+        Welcome To Our Auction
+        <br>
+    </h1>
+</header>
+<header>
+    <main>
+        <!--        <section>-->
+        <div>
+            <p>Welcome to our website! Sign up or sign in to get started.</p>
+        </div>
+        <button id="signupBtn" onclick="gotosignup()">Sign Up</button>
+        <button id="signinBtn" onclick="gotosignin()">Sign In</button>
+        <!--        </section>-->
+    </main>
+</header>
+
+
+<script>
+    function gotosignup() {
+        window.location.href = '{% url "signup" %}';
+    }
+    function gotosignin() {
+        window.location.href = '{% url "signin" %}';
+    }
+</script>
+</body>
+</html>

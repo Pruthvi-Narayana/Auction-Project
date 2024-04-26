@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>Dashboard</title>
+  <style>
+    .customnav {
+      z-index: 999 !important;
+    }
+    .col-md-3 {
+      display: inline-block;
+      margin-left: -4px;
+    }
+    .carousel-indicators .active {
+      background-color: blue;
+    }
+    .col-md-3 img {
+      width: 100%;
+      height: auto;
+    }
+    body .carousel-indicator li {
+      background-color: blue;
+    }
+    body .carousel-indicators {
+      bottom: 0;
+    }
+    body .carousel-control-prev-icon,
+    body .carousel-control-next-icon {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body style="background-color:#7abecc;">
+{% load static %}
+<nav class="navbar customnav navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'dashboard' %}">Online Auction</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'sellpage' %}">Sell</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'showuser' %}">Show All Users.</a>
+          <a class="dropdown-item" href="{% url 'showproducts' %}">Show All Items</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'feedback' %}">Your Feedback</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="button" onclick="logout()">Logout</button>
+    </form>
+  </div>
+</nav>
+<br>
+<div class="container">
+  <!-- Slideshow starts here -->
+  <div id="demo" class="carousel slide my-3" data-ride="carousel">
+    <div class="container carousel-inner">
+      {% for chunk in x %}
+        <div class="carousel-item {% if forloop.first %} active {% endif %}">
+          <div class="row">
+            {% for product in chunk %}
+              {% if product %}
+                <div class="col-xs-3 col-sm-3 col-md-3">
+                  <div class="card">
+                    <img src="{{ product.productImage.url }}" alt="{{ product.productName }}" class="card-img-top" style="width: 100%; height: 250px; ">
+                    <div class="card-body" style="background-color:#76a9ff">
+                      <h5 class="card-title">{{ product.productName }}</h5>
+                      <p class="card-text">{{ product.productDescription }}</p>
+                      <!-- Add the form -->
+                      <form id="bidForm_{{ product.id }}" class="bid-form" style="display: none;" action="{% url 'update_bid' %}" method="post">
+                          {% csrf_token %}
+                          <input type="hidden" name="product_id" value="{{ product.id }}">
+                          <input type="hidden" name="bid_amount" id="bidAmount_{{ product.id }}">
+                      </form>
+                      <button id="viewProductBtn_{{ product.id }}" class="btn btn-primary cart" style="background-color:#fb8779" onclick="toggleInputField('{{ product.id }}')">BID ON THIS</button>
+                      <p class="card-text"><b>Highest Bid : $ {{ product.highestbid }}</b></p>
+
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Left and right controls for the slide -->
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+
+  {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                text: "{{ message }}",
+            });
+        {% endfor %}
+    {% endif %}
+
+  function logout() {
+    alert("You will be logged Out !");
+    window.location.href = "{% url 'logout_view' %}";
+  }
+
+  function toggleInputField(productId) {
+        var formId = 'bidForm_' + productId;
+        var inputId = 'bidAmount_' + productId;
+        var inputField = document.getElementById(inputId);
+        var bidAmount = prompt("Enter bid amount:");
+
+        if (bidAmount !== null) {
+            inputField.value = bidAmount;
+            document.getElementById(formId).submit();
+        }
+    }
+
+  // Function to handle bidding
+  function bid(productID) {
+    // Get the bid amount from the input field
+    var bidAmount = document.getElementById('investmentAmount_' + productID).value;
+
+    // Construct the URL with the product ID and bid amount
+    var url = "update_bid/" + productID + "/" + bidAmount;
+
+    // Navigate to the URL
+    window.location.href = url;
+  }
+
+  // Add event listeners to the bid buttons
+  {% for product in x %}
+    document.getElementById('bidButton_{{ product.id }}').addEventListener('click', function() {
+      bid({{ product.id }});
+    });
+  {% endfor %}
+</script>
+</body>
+</html>

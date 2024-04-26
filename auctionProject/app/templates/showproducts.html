@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-ZGBE+EgU8+W+zWhvIiV3x2tjKibpxlWb3gqAzQ/GxTCW0sgGKiz2t/0Ji06hOEd8YzHcl/hhspRiN9gmnW2q7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body style="background-color:#5A8C96">
+<nav class="navbar customnav navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'dashboard' %}">Online Auction</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'sellpage' %}">Sell</a>
+            </li>
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="">My Purchases</a>-->
+<!--            </li>-->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'showuser' %}">Show All Users.</a>
+                    <a class="dropdown-item" href="{% url 'showproducts' %}">Show All Items</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'feedback' %}">Your Feedback</a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="button" onclick="logout()">Logout</button>
+        </form>
+    </div>
+</nav>
+<script>
+    function logout() {
+        alert("You will be logged Out !");
+        window.location.href = "{% url 'logout_view' %}";
+    }
+</script>
+<div class="container" style="text-align: center; margin-top: 20px;">
+    <table border="1" style="width: 50%; margin: auto; border-collapse: collapse; margin-bottom: 20px;">
+        <thead style="background-color: #f2f2f2;">
+            <tr style="background-color:#6A8DCC">
+                <th style="padding: 10px;">Item</th>
+                <th style="padding: 10px;">Price</th>
+                <th style="padding: 10px;">Image</th>
+                <th style="padding: 10px;">Description</th>
+                <th style="padding: 10px;">Delete</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in x %}
+            <tr style="background-color:#7abecc;">
+                <td style="padding: 10px;">{{ u.productName }}</td>
+                <td style="padding: 10px;">${{ u.productPrice }}</td>
+                <td style="padding: 10px;">
+                    <img src="{{ u.productImage.url }}" alt="{{ u.productName }}" style="max-width: 200px; max-height: 500px;">
+                </td>
+                <td style="padding: 10px;"> {{ u.productDescription }}</td>
+                <td>
+                    <a href="delete/{{u.id}}" class="btn btn-danger"  style="padding: 10px; vertical-align: middle;">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+</body>
+</html>
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Script to display SweetAlert error messages -->
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                text: "{{ message }}",
+            });
+        {% endfor %}
+    {% endif %}
+</script>
